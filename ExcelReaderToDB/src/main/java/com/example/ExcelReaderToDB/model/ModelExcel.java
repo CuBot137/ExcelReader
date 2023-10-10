@@ -3,8 +3,10 @@ package com.example.ExcelReaderToDB.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
+
 
 @Entity
 @Builder
@@ -13,6 +15,7 @@ import java.time.LocalDateTime;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@Component
 public class ModelExcel {
 
     @Id
@@ -26,15 +29,24 @@ public class ModelExcel {
     @Column
     private String source;
     @Column
-    private String size4000;
+    private double size4000;
     @Column
-    private String size3500;
+    private double size3500;
     @Column
-    private String size2600;
+    private double size2600;
     @Column
-    private String hours;
+    private double hours;
+    //@Column
+   // private String destination;
     @Column
-    private String destination;
-    @Column
-    private String Hauliers;
+    private String hauliers;
+
+
+    public void setSize4000(Cell cell) {
+    }
+
+    public void setSize3500(Cell cell){
+    }
+    public void setSize2600(Cell cell){
+    }
 }
