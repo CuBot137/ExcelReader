@@ -29,13 +29,13 @@ public class ModelExcel {
     @Column
     private String source;
     @Column
-    private double size4000;
+    private int size4000;
     @Column
-    private double size3500;
+    private int size3500;
     @Column
-    private double size2600;
+    private int size2600;
     @Column
-    private double hours;
+    private int hours;
     //@Column
    // private String destination;
     @Column

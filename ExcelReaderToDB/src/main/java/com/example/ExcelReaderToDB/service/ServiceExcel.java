@@ -7,14 +7,17 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.xml.crypto.Data;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -40,61 +43,24 @@ public class ServiceExcel {
 
 
 
-//    public void saveExcelData(MultipartFile file) throws Exception {
-//        try (FileInputStream excelFile = new FileInputStream(ResourceUtils.getFile("classpath:data.xlsx"));
-//            Workbook workbook = new XSSFWorkbook(excelFile)) {
-//            Sheet sheet = workbook.getSheetAt(8);
-//            Iterator<Row> iterator = sheet.iterator();
-//
-//            int i = 4;
-//
-//            while (iterator.hasNext()) {
-//                Row currentRow = iterator.next();
-//                Iterator<Cell> cellIterator = currentRow.iterator();
-//
-//                String stringValue = null;
-//                double numericValue = 0.0;
-//
-//                while (cellIterator.hasNext()) {
-//
-//                    Cell currentCell = cellIterator.next();
-//                    if (currentCell.getCellType() == CellType.STRING) {
-//                        stringValue = currentCell.getStringCellValue();
-//                    } else if (currentCell.getCellType() == CellType.NUMERIC) {
-//                        numericValue = currentCell.getNumericCellValue();
-//                    }
-//                }
-//
-//                // Create and save a Data object to the database
-//                Data data = new Data(stringValue, numericValue);
-//                dataRepository.save(data);
-//            }
-//        }
-//    }
-//
-//
-
-
-    public void saveExcelData(MultipartFile file) throws IOException {
-        // Creating instance of workbook using the file parameter
-        Workbook workbook = new XSSFWorkbook(file.getInputStream());
-        // Creating instance of sheet. Sheet is the page you are on. Getting sheet 8 of Excel file.
+public void saveExcelData(@NotNull MultipartFile file) throws IOException {
+    try (Workbook workbook = new XSSFWorkbook(file.getInputStream())) {
         Sheet sheet = workbook.getSheetAt(8);
-        // Loop through each row in the excel form
+        List<ModelExcel> modelExcelList = new ArrayList<>();
         for(int i = 2; i <= sheet.getLastRowNum(); i++){
             Row row = sheet.getRow(i);
-
             if(row != null){
-                excelModel.setSource(formatter.formatCellValue(row.getCell(5)));
-                excelModel.setSize4000(row.getCell(6));
-                excelModel.setSize3500((row.getCell(7)));
-                excelModel.setSize2600(row.getCell(8));
-
-                repoExcel.save(excelModel);
+                ModelExcel modelExcel = new ModelExcel();
+                modelExcel.setSource(formatter.formatCellValue(row.getCell(5)));
+                modelExcel.setSize4000(row.getCell(6));
+                modelExcel.setSize3500((row.getCell(7)));
+                modelExcel.setSize2600(row.getCell(8));
+                modelExcelList.add(modelExcel);
             }
-
         }
+        repoExcel.saveAll(modelExcelList);
     }
+}
 
 
 
